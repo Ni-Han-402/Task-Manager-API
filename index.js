@@ -44,6 +44,33 @@ async function run() {
       const result = await taskCollection.insertOne(newTask);
       res.send(result);
     });
+
+    //GET SINGLE TASK API
+    app.get("/task/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const task = await taskCollection.findOne(query);
+      res.send(task);
+    });
+
+    //SINGLE TASK UPDATE
+    app.put("/task/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedTask = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateData = {
+        $set: {
+          task: updatedTask.task,
+        },
+      };
+      const result = await taskCollection.updateOne(
+        filter,
+        updateData,
+        options
+      );
+      res.send(result);
+    });
   } finally {
   }
 }
