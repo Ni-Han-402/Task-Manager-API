@@ -71,6 +71,21 @@ async function run() {
       );
       res.send(result);
     });
+
+    //TASK COMPLETE API
+    app.put("/task/:id", async (req, res) => {
+      const id = req.params.id;
+      const completedTask = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          status: completedTask.stutas,
+        },
+      };
+      const result = await taskCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    });
   } finally {
   }
 }
